@@ -2,7 +2,9 @@ package at.technikum.resilience.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record GeocodeResponse(Result[] results) {
+import java.util.List;
+
+public record GeocodeResponse(List<Result> results) {
 
     public record Result(Geometry geometry) {
     }

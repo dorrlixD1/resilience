@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.concurrent.CompletableFuture;
+
 @Service
 public class LocationService {
 
@@ -23,20 +25,24 @@ public class LocationService {
             @Value("${weather.location.api.url}") String apiUrl,
             @Value("${weather.location.api.key}") String apiKey
     ) {
-        this.httpService =httpService;
-        this.apiUrl =apiUrl;
-        this.apiKey= apiKey;
+        this.httpService = httpService;
+        this.apiUrl = apiUrl;
+        this.apiKey = apiKey;
     }
 
     @Retry(name = "httpService")
     @TimeLimiter(name = "httpService")
     @CircuitBreaker(name = "httpService")
-    public GeocodeResponse.Geometry getCoordinatesByCountry(String country) {
+    public CompletableFuture<GeocodeResponse.Geometry> getCoordinatesByCountry(String country) {
         val uriComponents = UriComponentsBuilder.fromHttpUrl(apiUrl)
                 .path("json")
                 .queryParam("q", country)
                 .queryParam("key", apiKey)
                 .build();
-        return httpService.call(uriComponents.toUriString(), GeocodeResponse.class).results()[0].geometry();
+        return CompletableFuture.supplyAsync(() ->
+                httpService.call(uriComponents.toUriString(), GeocodeResponse.class)
+                        .results()
+                        .stream().findFirst().orElseThrow()
+                        .geometry());
     }
 }

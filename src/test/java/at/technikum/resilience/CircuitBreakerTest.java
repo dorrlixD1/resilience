@@ -5,20 +5,18 @@ import at.technikum.resilience.services.HttpService;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
-import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.concurrent.ExecutionException;
-
+import static at.technikum.resilience.util.TestUtil.assertCompletableFutureException;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -88,8 +86,4 @@ class CircuitBreakerTest {
         assertEquals(CircuitBreaker.State.CLOSED, circuitBreaker.getState());
     }
 
-    private <T> void assertCompletableFutureException(Class<T> exceptionClass, Executable executable) {
-        val exception = assertThrows(ExecutionException.class, executable);
-        assertInstanceOf(exceptionClass, exception.getCause());
-    }
 }

@@ -18,7 +18,7 @@ public class WeatherService {
     public WeatherForecast getWeatherForecastByCountry(String country) {
         GeocodeResponse.Geometry geometry;
         try {
-            geometry = locationService.getCoordinatesByCountry(country);
+            geometry = locationService.getCoordinatesByCountry(country).get();
         } catch (Exception exc) {
             log.error(exc.getMessage());
             return null;
