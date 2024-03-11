@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class CircuitBreakerTest {
+class CircuitBreakerTest {
 
     @MockBean
     private HttpService httpService;
@@ -45,7 +45,7 @@ public class CircuitBreakerTest {
     }
 
     @Test
-    public void checkIfCircuitBreakerChangesStateToOpen_AfterSixFailedCalls() throws Exception {
+    void checkIfCircuitBreakerChangesStateToOpen_AfterSixFailedCalls() {
         when(httpService.call(anyString(), any())).thenThrow(new RuntimeException());
 
         // Three calls because of Retry-mechanism
@@ -56,7 +56,7 @@ public class CircuitBreakerTest {
     }
 
     @Test
-    public void checkIfCircuitBreakerChangesStateToHalfOpen_AfterTenSeconds() {
+    void checkIfCircuitBreakerChangesStateToHalfOpen_AfterTenSeconds() {
         when(httpService.call(anyString(), any())).thenThrow(new RuntimeException());
 
         // Three calls because of Retry-mechanism
@@ -67,7 +67,7 @@ public class CircuitBreakerTest {
     }
 
     @Test
-    public void checkIfCircuitBreakerChangesStateFromHalfOpenToClosed_AfterThreeSuccessfulCalls() {
+    void checkIfCircuitBreakerChangesStateFromHalfOpenToClosed_AfterThreeSuccessfulCalls() {
         when(httpService.call(anyString(), any()))
                 .thenThrow(new RuntimeException())
                 .thenThrow(new RuntimeException())
