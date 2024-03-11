@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.concurrent.CompletableFuture;
+
 @Service
 public class ForecastService {
 
@@ -30,7 +32,8 @@ public class ForecastService {
     // Retry ( CircuitBreaker ( TimeLimiter ( Function ) ) )
     @Retry(name = "httpService")
     @CircuitBreaker(name = "httpService")
-    public WeatherForecast getWeatherForecastByCoordinates(double latitude, double longitude) {
+    @TimeLimiter(name = "httpService")
+    public CompletableFuture<WeatherForecast> getWeatherForecastByCoordinates(double latitude, double longitude) {
         val uriComponents = UriComponentsBuilder.fromHttpUrl(apiUrl)
                 .path("forecast")
                 .queryParam("latitude", latitude)
@@ -38,6 +41,6 @@ public class ForecastService {
                 .queryParam("current", String.join(",", CURRENT_WEATHER_VARIABLES))
                 .queryParam("daily", String.join(",", DAILY_WEATHER_VARIABLES))
                 .build();
-        return httpService.call(uriComponents.toUriString(), WeatherForecast.class);
+        return CompletableFuture.supplyAsync(() -> httpService.call(uriComponents.toUriString(), WeatherForecast.class));
     }
 }

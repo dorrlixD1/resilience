@@ -23,6 +23,11 @@ public class WeatherService {
             log.error(exc.getMessage());
             return null;
         }
-        return forecastService.getWeatherForecastByCoordinates(geometry.latitude(), geometry.longitude());
+        try {
+            forecastService.getWeatherForecastByCoordinates(geometry.latitude(), geometry.longitude()).get();
+        } catch (Exception exc) {
+            log.error(exc.getMessage());
+        }
+        return null;
     }
 }
