@@ -1,6 +1,8 @@
 package at.technikum.resilience.util;
 
 import at.technikum.resilience.services.WeatherService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 
 @Component
-@Profile("!test")
+@ConditionalOnProperty(value = "weather.ui.enabled", havingValue = "true")
 public class WeatherFrame extends JFrame {
 
     private WeatherService weatherService;

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.concurrent.ExecutionException;
 
@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@TestPropertySource("classpath:application-circuitbreaker.properties")
 class CircuitBreakerTest {
 
     @MockBean
@@ -88,7 +88,7 @@ class CircuitBreakerTest {
         assertEquals(CircuitBreaker.State.CLOSED, circuitBreaker.getState());
     }
 
-    private <T>void assertCompletableFutureException(Class<T>exceptionClass, Executable executable){
+    private <T> void assertCompletableFutureException(Class<T> exceptionClass, Executable executable) {
         val exception = assertThrows(ExecutionException.class, executable);
         assertInstanceOf(exceptionClass, exception.getCause());
     }
