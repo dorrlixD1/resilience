@@ -1,6 +1,6 @@
-package at.technikum.reslience.services;
+package at.technikum.resilience.services;
 
-import at.technikum.reslience.model.WeatherForecast;
+import at.technikum.resilience.model.WeatherForecast;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;

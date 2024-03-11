@@ -1,4 +1,4 @@
-package at.technikum.reslience.model;
+package at.technikum.resilience.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

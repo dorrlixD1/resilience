@@ -1,4 +1,4 @@
-package at.technikum.reslience.services;
+package at.technikum.resilience.services;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;

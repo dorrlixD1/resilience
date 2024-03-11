@@ -1,6 +1,6 @@
-package at.technikum.reslience.util;
+package at.technikum.resilience.util;
 
-import at.technikum.reslience.services.WeatherService;
+import at.technikum.resilience.services.WeatherService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 

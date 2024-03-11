@@ -1,7 +1,7 @@
-package at.technikum.reslience;
+package at.technikum.resilience;
 
-import at.technikum.reslience.services.ForecastService;
-import at.technikum.reslience.services.HttpService;
+import at.technikum.resilience.services.ForecastService;
+import at.technikum.resilience.services.HttpService;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;

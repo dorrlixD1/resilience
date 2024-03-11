@@ -1,7 +1,7 @@
-package at.technikum.reslience.services;
+package at.technikum.resilience.services;
 
-import at.technikum.reslience.model.GeocodeResponse;
-import at.technikum.reslience.model.WeatherForecast;
+import at.technikum.resilience.model.GeocodeResponse;
+import at.technikum.resilience.model.WeatherForecast;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
