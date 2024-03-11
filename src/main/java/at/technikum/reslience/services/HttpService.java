@@ -12,7 +12,6 @@ public class HttpService {
     public <T> T call(String url, Class<T> clazz){
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<T> result = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(null), clazz);
-
         return result.getBody();
     }
 }

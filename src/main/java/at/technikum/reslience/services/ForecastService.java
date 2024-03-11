@@ -1,6 +1,9 @@
 package at.technikum.reslience.services;
 
 import at.technikum.reslience.model.WeatherForecast;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,12 +21,15 @@ public class ForecastService {
 
     public ForecastService(
             HttpService httpService,
-            @Value("weather.forecast.api.url") String apiUrl
+            @Value("${weather.forecast.api.url}") String apiUrl
     ) {
         this.httpService = httpService;
         this.apiUrl = apiUrl;
     }
 
+    // Retry ( CircuitBreaker ( TimeLimiter ( Function ) ) )
+    @Retry(name = "httpService")
+    @CircuitBreaker(name = "httpService")
     public WeatherForecast getWeatherForecastByCoordinates(double latitude, double longitude) {
         val uriComponents = UriComponentsBuilder.fromHttpUrl(apiUrl)
                 .path("forecast")

@@ -1,6 +1,9 @@
 package at.technikum.reslience.services;
 
 import at.technikum.reslience.model.GeocodeResponse;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,14 +20,17 @@ public class LocationService {
 
     public LocationService(
             HttpService httpService,
-            @Value("weather.location.api.url") String apiUrl,
-            @Value("weather.location.api.key") String apiKey
+            @Value("${weather.location.api.url}") String apiUrl,
+            @Value("${weather.location.api.key}") String apiKey
     ) {
         this.httpService =httpService;
         this.apiUrl =apiUrl;
         this.apiKey= apiKey;
     }
 
+    @Retry(name = "httpService")
+    @TimeLimiter(name = "httpService")
+    @CircuitBreaker(name = "httpService")
     public GeocodeResponse.Geometry getCoordinatesByCountry(String country) {
         val uriComponents = UriComponentsBuilder.fromHttpUrl(apiUrl)
                 .path("json")
