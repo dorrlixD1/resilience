@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @ConditionalOnProperty(value = "weather.ui.enabled", havingValue = "true")
@@ -28,11 +29,23 @@ public class WeatherFrame extends JFrame {
             String place = jTextField.getText().trim();
             if (place.isEmpty()) return;
 
-            val forecast = weatherService.getWeatherForecastByCountry(place);
-
             bottomPanel.removeAll();
-            bottomPanel.add(new WeatherGraph(forecast, place.toUpperCase()));
+            label.setText("Loading data...");
+            bottomPanel.add(label);
             bottomPanel.updateUI();
+
+            CompletableFuture.runAsync(() -> {
+                val forecast = weatherService.getWeatherForecastByCountry(place);
+                if (forecast == null) {
+                    label.setText("Failed to load data for " + place + "!");
+                    bottomPanel.updateUI();
+                    return;
+                }
+
+                bottomPanel.removeAll();
+                bottomPanel.add(new WeatherGraph(forecast, place.toUpperCase()));
+                bottomPanel.updateUI();
+            });
         });
 
         topPanel.add(jTextField);
