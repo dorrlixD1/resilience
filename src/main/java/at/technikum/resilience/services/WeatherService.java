@@ -15,16 +15,19 @@ public class WeatherService {
 
     private ForecastService forecastService;
 
-    public WeatherForecast getWeatherForecastByCountry(String country) {
+    public WeatherForecast getWeatherForecastByCountry(String place) {
+        log.info("Loading weather for place {}", place);
+
         GeocodeResponse.Geometry geometry;
         try {
-            geometry = locationService.getCoordinatesByCountry(country).get();
+            geometry = locationService.getCoordinatesByCountry(place).get();
+            log.info("Received geometry data for {} with latitude={} and longitude={}", place, geometry.latitude(), geometry.longitude());
         } catch (Exception exc) {
             log.error(exc.getMessage());
             return null;
         }
         try {
-            forecastService.getWeatherForecastByCoordinates(geometry.latitude(), geometry.longitude()).get();
+            return forecastService.getWeatherForecastByCoordinates(geometry.latitude(), geometry.longitude()).get();
         } catch (Exception exc) {
             log.error(exc.getMessage());
         }

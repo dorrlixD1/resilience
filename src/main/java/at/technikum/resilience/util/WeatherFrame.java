@@ -1,9 +1,8 @@
 package at.technikum.resilience.util;
 
 import at.technikum.resilience.services.WeatherService;
+import lombok.val;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -13,30 +12,40 @@ import java.awt.*;
 @ConditionalOnProperty(value = "weather.ui.enabled", havingValue = "true")
 public class WeatherFrame extends JFrame {
 
-    private WeatherService weatherService;
-
     public WeatherFrame(WeatherService weatherService) throws Exception {
         super("Weather Forecast Checker");
-        this.weatherService = weatherService;
 
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-
-        JTextField jTextField = new JTextField(20);
-        JButton jButton = new JButton("Load Weather");
 
         JPanel topPanel = new JPanel(new FlowLayout());
         JPanel bottomPanel = new JPanel();
 
-        bottomPanel.add(new JLabel("Weather Data"));
+        JLabel label = new JLabel("Load a place to display the data here");
+
+        JTextField jTextField = new JTextField(20);
+        JButton jButton = new JButton("Load Weather");
+        jButton.addActionListener(l -> {
+            String place = jTextField.getText().trim();
+            if (place.isEmpty()) return;
+
+            val forecast = weatherService.getWeatherForecastByCountry(place);
+
+            bottomPanel.removeAll();
+            bottomPanel.add(new WeatherGraph(forecast, place.toUpperCase()));
+            bottomPanel.updateUI();
+        });
 
         topPanel.add(jTextField);
         topPanel.add(jButton);
 
-        setLayout(new GridLayout(2, 1));
-        add(topPanel);
-        add(bottomPanel);
+        bottomPanel.add(label);
+
+        setLayout(new BorderLayout());
+        add(topPanel, BorderLayout.PAGE_START);
+        add(bottomPanel, BorderLayout.CENTER);
 
         setSize(900, 600);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 }
