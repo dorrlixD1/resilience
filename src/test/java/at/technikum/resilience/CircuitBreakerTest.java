@@ -85,5 +85,4 @@ class CircuitBreakerTest {
         // After third successfully call - circuit breaker closes
         assertEquals(CircuitBreaker.State.CLOSED, circuitBreaker.getState());
     }
-
 }
